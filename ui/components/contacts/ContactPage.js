@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import Loader from '../loader/Loader';
-import Error from '../error/Error';
+import {Loader, Error} from '../pattern-lib';
 import getContacts from '../../actions/contact-thunk';
 import ContactHeader from './ContactHeader';
 import './ContactPage.css';

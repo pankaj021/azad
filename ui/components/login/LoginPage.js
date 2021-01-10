@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {GoogleLogin} from 'react-google-login';
 import './LoginPage.css'
 import { getUserInfoSuccess, getUserInfoError } from '../../actions/sync-actions';
-import Error from '../error/Error';
+import {Error} from '../pattern-lib';
 
 function LoginPage({error, getUserInfoSuccess, getUserInfoError}) {
     if(error.isError) return <Error errorMsg={error.errorMsg}/>

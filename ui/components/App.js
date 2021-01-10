@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import './App.css';
 import LoginPage from './login/LoginPage';
 import ContactPage from './contacts/ContactPage';
-import Error from './error/Error';
+import {Error} from './pattern-lib';
 
 function App({user, error}) {
     if(error.isError) return <Error errorMsg={error.errorMsg}/>
