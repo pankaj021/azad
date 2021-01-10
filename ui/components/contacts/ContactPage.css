@@ -1,19 +1,23 @@
 header{
     display: flex;
-    background: linear-gradient(90.21deg, #053ED1 0%, #0F4EAC 100%);
+    background: linear-gradient(90.21deg, #1f2a48 0%, #0F4EAC 100%);
     align-items: center;
     padding: .5rem 2rem;
     color: #FFFFFF;
     height: 64px;
 }
+header h3{
+    margin: 0px 1rem;
+}
 .logo-section{
     display: flex;
     align-items: center;
+    width: 100%;
 }
 .user-logo{
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
 }
 .person-info{
     line-height: 1;
@@ -86,11 +90,23 @@ header{
         transition: all 0.3s ease-in-out;
     }
     .user-logo{
-        width: 25px;
-        height: 25px;
+        width: 40px;
+        height: 40px;
         transition: all 0.3s ease-in-out;
     }
     .c-items{
         flex: none;
+    }
+    header {
+        padding: .25rem .5rem;
+    }
+    header h3{
+        margin: 0px .5rem;
+    }
+    h3{
+        font-size: 1rem !important;
+    }
+    h4{
+        font-size: .75rem !important;
     }
 }

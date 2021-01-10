@@ -3,16 +3,16 @@ import {connect} from 'react-redux';
 import './App.css';
 import LoginPage from './login/LoginPage';
 import ContactPage from './contacts/ContactPage';
+import Header from './home/Header';
+import Body from './home/Body';
 import {Error, Textarea, Accordion, AccordionCollapsed, AccordionExpanded} from './pattern-lib';
 
 function App({user, error}) {
     return (
-        <Accordion 
-            isExpanded = {false}
-        >
-            <AccordionCollapsed title={'My goals'}><div>Collllllllllll</div></AccordionCollapsed>
-            <AccordionExpanded><div>Exppsppppppppp</div></AccordionExpanded>
-        </Accordion>
+        <div>
+            <Header />
+            <Body />
+        </div>
     )
 }
 
