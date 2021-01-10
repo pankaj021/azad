@@ -1,47 +1,45 @@
 const {
-    createTarget,
-    findTargetById,
-    findAllTargets,
-    updateTargetById,
-    deleteTargetById
-} = require('../use-cases/target');
-const Target = require('../entities/Target');
+    createTeacher,
+    findTeacherById,
+    findAllTeachers,
+    updateTeacherById,
+    deleteTeacherById
+} = require('../use-cases/teacher');
+const Teacher = require('../entities/Teacher');
 const {NoResourceFound, ResourceAlreadyExists} = require('../middlewares/errors');
 
 module.exports = {
     getAll: async(req, res, next) => {
         try {
-            const items = await findAllTargets();
-            res.status(200).json(items.map(item => Target.res(item)));
+            const items = await findAllTeachers();
+            res.status(200).json(items.map(item => Teacher.res(item)));
         } catch (error) {
             next(error);
         }
     }, 
     getOne: async (req, res, next) => {
         try {
-            const item = await findTargetById(req.params.id);
+            const item = await findTeacherById(req.params.id);
             if(!item){
                 throw new NoResourceFound();
             } 
-            res.status(200).json(Target.res(item));
+            res.status(200).json(Teacher.res(item));
         } catch (error) {
             next(error);
         }
     }, 
     createOne: async (req, res, next) => {
         try {
-            const {title, description, amount, targetDate} = req.body;
+            const {name, subject} = req.body;
             const user = req.AZAD_USER;            
             const doc = {
-                title: title || "",
-                description: description || "",
-                amount: amount,
-                targetDate: targetDate || "", 
+                name: name,
+                subject: subject || [],
                 createdBy: user.email,
                 updatedBy: user.email,
             }
-            const item = await createTarget(doc);
-            res.status(200).json(Target.res(item));
+            const item = await createTeacher(doc);
+            res.status(200).json(Teacher.res(item));
         } catch (error) {
             if (error.name === 'MongoError' && error.code === 11000) {
                 return next(new ResourceAlreadyExists('This document already exists.'));
@@ -51,10 +49,10 @@ module.exports = {
     }, 
     updateOne: async (req, res, next) => {
         try {
-            const {title, description, amount, targetDate} = req.body;
+            const {name, subject} = req.body;
             const id = req.params.id;
             const user = req.AZAD_USER;            
-            const existingDoc = await findTargetById(id);
+            const existingDoc = await findTeacherById(id);
             if(!existingDoc){
                 throw new NoResourceFound();
             } else {
@@ -62,12 +60,10 @@ module.exports = {
                     updatedBy: user.email,
                     updatedAt: new Date(),
                 }
-                if(title) doc.title = title;
-                if(description) doc.description = description;
-                if(amount) doc.amount = amount;
-                if(targetDate) doc.targetDate = targetDate;
-                const item = await updateTargetById(id, doc);
-                res.status(200).json(Target.res(item));
+                if(name) doc.name = name;
+                if(subject) doc.subject = subject;
+                const item = await updateTeacherById(id, doc);
+                res.status(200).json(Teacher.res(item));
             }
         } catch (error) {
             if (error.name === 'MongoError' && error.code === 11000) {
@@ -79,11 +75,11 @@ module.exports = {
     deleteOne: async (req, res, next) => {
         try {
             const id = req.params.id;
-            const existingDoc = await findTargetById(id);
+            const existingDoc = await findTeacherById(id);
             if(!existingDoc){
                 throw new NoResourceFound();
             } else {
-                await deleteTargetById(id);
+                await deleteTeacherById(id);
                 res.status(200).json();
             }
         } catch (error) {

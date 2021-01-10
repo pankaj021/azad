@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getAll, getOne, createOne, updateOne, deleteOne} = require('../controllers/contributor');
+const {getAll, getOne, createOne, updateOne, deleteOne} = require('../controllers/teacher');
 
 router.get('/', getAll);
 router.get('/:id', getOne);

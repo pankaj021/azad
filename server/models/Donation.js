@@ -3,7 +3,7 @@ const validateAmount = function (amount) {
     return !!amount;
 }
 const DonationSchema = {
-    target: {
+    targetId: {
         type: mongoose.Schema.ObjectId, ref: 'Target',
         required: [true, "Enter target details."]
     },

@@ -43,10 +43,20 @@ class AuthenticationError extends Error {
     }
 }
 
+class ValidationError extends Error {
+    constructor(message) {
+        super(message || "Not a valid request."); 
+        this.name = "ValidationError"; 
+        Error.captureStackTrace(this, this.constructor);
+        this.status = 400;
+    }
+}
+
 module.exports = {
     ApiReturnedError,
     NoRouteFound,
     NoResourceFound,
     ResourceAlreadyExists,
-    AuthenticationError
+    AuthenticationError,
+    ValidationError,
 }

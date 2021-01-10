@@ -18,9 +18,9 @@ module.exports = {
         return Donation.deleteOne({'_id': id});
     },
     findDonationsByTargetId: (id) => {
-        return Donation.find({'target': id});
+        return Donation.find({'targetId': id});
     },
     findDonationsByEmail: (email) => {
-        return Donation.findOne({'donatedBy': email});
+        return Donation.find({'donatedBy': email});
     },
 }

@@ -13,6 +13,9 @@ const TargetSchema = {
         type: Number,
         default: 11000
     }, 
+    targetDate: {
+        type: Date, 
+    },
     createdBy: {
         type: String,
         required: [true, "createdBy can't be empty."]

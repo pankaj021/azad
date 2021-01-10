@@ -4,10 +4,8 @@ module.exports = {
     res: (doc) => {
         return {
             _id: doc._id,
-            title: doc.title || "",
-            description: doc.description || "",
-            amount: doc.amount || "",
-            targetDate: moment(doc.targetDate).format("LL") || "",
+            name: doc.name || "",
+            subject: doc.subject || [],
             createdBy: doc.createdBy || "",
             updatedBy: doc.updatedBy || "",
             createdAt: moment(doc.createdAt).format("LL") || "",

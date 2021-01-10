@@ -8,69 +8,82 @@ const {
     findDonationsByEmail,
 } = require('../use-cases/donation');
 const {findAllContributors} = require('../use-cases/contributor');
+const {findAllTargets} = require('../use-cases/target');
 const Donation = require('../entities/Donation');
+const Contributor = require('../entities/Contributor');
+const Target = require('../entities/Target');
 const {NoResourceFound, ResourceAlreadyExists} = require('../middlewares/errors');
 
 const getContributorsObj = async () => {
     const items = await findAllContributors();
     const obj = {};
-    items.forEach(({email, name}) => obj[email] = name);
+    items.forEach(item => obj[item.email] = Contributor.res(item));
+    return obj;
+}
+const getTargetsObj = async () => {
+    const items = await findAllTargets();
+    const obj = {};
+    items.forEach(item => obj[item._id] = Target.res(item));
     return obj;
 }
 
 module.exports = {
     getAll: async(req, res, next) => {
         try {
-            const [items, contributorsObj] = await Promise.all([
+            const [items, contributorsObj, targetObj] = await Promise.all([
                 findAllDonations(), 
-                getContributorsObj()
+                getContributorsObj(),
+                getTargetsObj()
             ]);
-            res.status(200).json(items.map(item => Donation.res({
-                ...item, 
-                donatedBy: contributorsObj[item.donatedBy] || item.donatedBy
-            })));
+            res.status(200).json(items.map(item => Donation.res(
+                item, 
+                contributorsObj[item.donatedBy] || {},
+                targetObj[item.targetId] || {},
+            )));
         } catch (error) {
             next(error);
         }
     }, 
     getOne: async (req, res, next) => {
         try {
-            const [item, contributorsObj] = await Promise.all([
+            const [item, contributorsObj, targetObj] = await Promise.all([
                 findDonationById(req.params.id),
-                getContributorsObj()
+                getContributorsObj(),
+                getTargetsObj()
             ]);
             if(!item){
                 throw new NoResourceFound();
             } 
-            res.status(200).json(Donation.res({
-                ...item, 
-                donatedBy: contributorsObj[item.donatedBy] || item.donatedBy
-            }));
+            res.status(200).json(Donation.res(
+                item, 
+                contributorsObj[item.donatedBy] || {},
+                targetObj[item.targetId] || {},
+            ));
         } catch (error) {
             next(error);
         }
     }, 
     createOne: async (req, res, next) => {
         try {
-            const {target, amount, donatedBy} = req.body;
+            const {targetId, amount, donatedBy} = req.body;
             const user = req.AZAD_USER;            
             const doc = {
-                target,
+                targetId,
                 amount,
                 donatedBy,
                 createdBy: user.email,
                 updatedBy: user.email,
             }
-            const item = await createDonation(doc);
-            const contributorsObj = await getContributorsObj();
-            const [item, contributorsObj] = await Promise.all([
-                await createDonation(doc),
-                getContributorsObj()
+            const [item, contributorsObj, targetObj] = await Promise.all([
+                createDonation(doc),
+                getContributorsObj(),
+                getTargetsObj()
             ]);
-            res.status(200).json(Donation.res({
-                ...item, 
-                donatedBy: contributorsObj[item.donatedBy] || item.donatedBy
-            }));
+            res.status(200).json(Donation.res(
+                item, 
+                contributorsObj[item.donatedBy] || {},
+                targetObj[item.targetId] || {},
+            ));
         } catch (error) {
             if (error.name === 'MongoError' && error.code === 11000) {
                 return next(new ResourceAlreadyExists('This document already exists.'));
@@ -80,7 +93,7 @@ module.exports = {
     }, 
     updateOne: async (req, res, next) => {
         try {
-            const {title, description, amount} = req.body;
+            const {amount, donatedBy} = req.body;
             const id = req.params.id;
             const user = req.AZAD_USER;            
             const existingDoc = await findDonationById(id);
@@ -91,15 +104,18 @@ module.exports = {
                     updatedBy: user.email,
                     updatedAt: new Date(),
                 }
-                if(title) doc.title = title;
-                if(description) doc.description = description;
+                if(donatedBy) doc.donatedBy = donatedBy;
                 if(amount) doc.amount = amount;
-                const item = await updateDonationById(id, doc);
-            const contributorsObj = await getContributorsObj();
-                res.status(200).json(Donation.res({
-                    ...item, 
-                    donatedBy: contributorsObj[item.donatedBy] || item.donatedBy
-                }));
+                const [item, contributorsObj, targetObj] = await Promise.all([
+                    updateDonationById(id, doc),
+                    getContributorsObj(),
+                    getTargetsObj()
+                ]);
+                res.status(200).json(Donation.res(
+                    item, 
+                    contributorsObj[item.donatedBy] || {},
+                    targetObj[item.targetId] || {},
+                ));
             }
         } catch (error) {
             if (error.name === 'MongoError' && error.code === 11000) {
@@ -121,5 +137,38 @@ module.exports = {
         } catch (error) {
             next(error);
         }
-    }
+    },
+    getOneByEmail: async (req, res, next) => {
+        try {
+            const user = req.AZAD_USER;   
+            const [items, contributorsObj, targetObj] = await Promise.all([
+                findDonationsByEmail(user.email),
+                getContributorsObj(),
+                getTargetsObj()
+            ]);
+            res.status(200).json(items.map(item => Donation.res(
+                item, 
+                contributorsObj[item.donatedBy] || {},
+                targetObj[item.targetId] || {},
+            )));
+        } catch (error) {
+            next(error);
+        }
+    },
+    getOneByTargetId: async (req, res, next) => {
+        try {
+            const [items, contributorsObj, targetObj] = await Promise.all([
+                findDonationsByTargetId(req.params.id),
+                getContributorsObj(),
+                getTargetsObj()
+            ]);
+            res.status(200).json(items.map(item => Donation.res(
+                item, 
+                contributorsObj[item.donatedBy] || {},
+                targetObj[item.targetId] || {},
+            )));
+        } catch (error) {
+            next(error);
+        }
+    },
 }

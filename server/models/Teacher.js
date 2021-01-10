@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const TeacherSchema = {
     name: {
         type: String,
-        required: [true, "Name can't be empty."]
+        required: [true, "Name can't be empty."],
+        unique: true
     },
-    Subject: {
+    subject: {
         type: [String],
         default: []
     }, 
