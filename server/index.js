@@ -14,10 +14,9 @@ const donationRouter = require('./routes/donation');
 const db = require('./db');
 const {NoRouteFound} = require('./middlewares/errors');
 const errorHandler = require('./middlewares/errors/errorHandler');
-const authHandler = require('./middlewares/auth');
 
 const NODE_PATH = process.cwd();
-// db.init();
+db.init();
 const app = express();
 
 app.set('views', path.join(NODE_PATH, '/ui/templates'));
@@ -33,10 +32,10 @@ app.use(express.static(path.join(NODE_PATH, 'public')));
 
 app.use('/', indexRouter);
 app.use('/contacts', contactsRouter);
-app.use('/contributor', authHandler, contributorRouter);
-app.use('/target', authHandler, targetRouter);
-app.use('/teacher', authHandler, teacherRouter);
-app.use('/donation', authHandler, donationRouter);
+app.use('/contributor', contributorRouter);
+app.use('/target', targetRouter);
+app.use('/teacher', teacherRouter);
+app.use('/donation', donationRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
