@@ -17,7 +17,7 @@ const errorHandler = require('./middlewares/errors/errorHandler');
 const authHandler = require('./middlewares/auth');
 
 const NODE_PATH = process.cwd();
-db.init();
+// db.init();
 const app = express();
 
 app.set('views', path.join(NODE_PATH, '/ui/templates'));
@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(NODE_PATH, 'public')));
 
 app.use('/', indexRouter);
-app.use('/contacts', authHandler, contactsRouter);
+app.use('/contacts', contactsRouter);
 app.use('/contributor', authHandler, contributorRouter);
 app.use('/target', authHandler, targetRouter);
 app.use('/teacher', authHandler, teacherRouter);

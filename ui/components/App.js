@@ -3,12 +3,17 @@ import {connect} from 'react-redux';
 import './App.css';
 import LoginPage from './login/LoginPage';
 import ContactPage from './contacts/ContactPage';
-import {Error} from './pattern-lib';
+import {Error, Textarea, Accordion, AccordionCollapsed, AccordionExpanded} from './pattern-lib';
 
 function App({user, error}) {
-    if(error.isError) return <Error errorMsg={error.errorMsg}/>
-    if(user && user.tokenObj) return <ContactPage/>
-    return <LoginPage />
+    return (
+        <Accordion 
+            isExpanded = {false}
+        >
+            <AccordionCollapsed title={'My goals'}><div>Collllllllllll</div></AccordionCollapsed>
+            <AccordionExpanded><div>Exppsppppppppp</div></AccordionExpanded>
+        </Accordion>
+    )
 }
 
 const mapStateToProps = (state) => ({

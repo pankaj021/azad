@@ -1,10 +1,9 @@
 body{
     font: 16px "Gotham Rounded A", "Gotham Rounded B", "Gotham Rounded", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    /* -webkit-font-smoothing: antialiased; */
+    -webkit-font-smoothing: antialiased;
     word-wrap: break-word;
     line-height: 1.8;
     margin: 0;
-    font-family: Poppins;
     font-style: normal;
     letter-spacing: 0.08em;
 }
@@ -27,9 +26,7 @@ img{
 }
 :root {
     --text-color: rgba(0,0,0,.87);
-    --success-color: GREEN;
-    --error-color: GREEN;
-    --body-bg: aliceblue;
+    --body-bg: #FFFFFF;
     background-color: var(--body-bg);
     color: var(--text-color);
 }

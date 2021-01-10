@@ -1,11 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-function Button() {
+function Button(props) {
+    const text = props.text || "click me";
+    const className = props.className || "";
+    const onClickHandler = props.onClickHandler || (() => {});
     return (
-        <div className="Button">
-            Button
-        </div>
+        <button 
+            className={`btn ${className}`}
+            onClick={onClickHandler}
+        >
+            {text}
+        </button>
     )
 }
 
